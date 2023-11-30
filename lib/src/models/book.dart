@@ -8,6 +8,7 @@ class Book {
     required this.author,
     required this.imageUrl,
     required this.downloadUrl,
+    required this.favorite,
   });
 
   final int id;
@@ -15,6 +16,7 @@ class Book {
   final String author;
   final String imageUrl;
   final String downloadUrl;
+  final bool favorite;
 
   Book copyWith({
     int? id,
@@ -22,6 +24,7 @@ class Book {
     String? author,
     String? imageUrl,
     String? downloadUrl,
+    bool? favorite,
   }) {
     return Book(
       id: id ?? this.id,
@@ -29,6 +32,7 @@ class Book {
       author: author ?? this.author,
       imageUrl: imageUrl ?? this.imageUrl,
       downloadUrl: downloadUrl ?? this.downloadUrl,
+      favorite: favorite ?? this.favorite,
     );
   }
 
@@ -39,6 +43,7 @@ class Book {
       'author': author,
       'imageUrl': imageUrl,
       'downloadUrl': downloadUrl,
+      'favorite': favorite,
     };
   }
 
@@ -49,6 +54,7 @@ class Book {
       author: map['author'] as String,
       imageUrl: map['cover_url'] as String,
       downloadUrl: map['download_url'] as String,
+      favorite: false,
     );
   }
 
@@ -59,7 +65,7 @@ class Book {
 
   @override
   String toString() {
-    return 'Book(id: $id, title: $title, author: $author, imageUrl: $imageUrl, downloadUrl: $downloadUrl)';
+    return 'Book(id: $id, title: $title, author: $author, imageUrl: $imageUrl, downloadUrl: $downloadUrl, favorite: $favorite)';
   }
 
   @override
@@ -70,7 +76,8 @@ class Book {
         other.title == title &&
         other.author == author &&
         other.imageUrl == imageUrl &&
-        other.downloadUrl == downloadUrl;
+        other.downloadUrl == downloadUrl &&
+        other.favorite == favorite;
   }
 
   @override
@@ -79,6 +86,7 @@ class Book {
         title.hashCode ^
         author.hashCode ^
         imageUrl.hashCode ^
-        downloadUrl.hashCode;
+        downloadUrl.hashCode ^
+        favorite.hashCode;
   }
 }
