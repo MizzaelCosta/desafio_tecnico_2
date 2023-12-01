@@ -1,4 +1,3 @@
-import 'package:desafio_tecnico_2/src/exceptions/not_found_exception.dart';
 import 'package:dio/dio.dart';
 
 import '../models/book.dart';
@@ -21,8 +20,6 @@ class BooksRepositoryDio implements BooksRepository {
       }
 
       return books;
-    } else if (response.statusCode == 404) {
-      throw NotFoundException('Url não encontrada');
     } else {
       throw Exception('Erro ao carregar.');
     }
