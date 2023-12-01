@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../constants/color.dart';
 import '../../../models/book.dart';
 
 class BookView extends StatelessWidget {
@@ -13,7 +14,7 @@ class BookView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
+      color: white,
       elevation: 0,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -34,11 +35,10 @@ class BookView extends StatelessWidget {
                     child: ClipPath(
                       clipper: _Clip(),
                       child: Container(
+                        key: Key('favorite-key:${book.id}'),
                         height: 25,
                         width: 15,
-                        decoration: BoxDecoration(
-                          color: (book.favorite) ? Colors.red : Colors.white,
-                        ),
+                        color: (book.favorite) ? red : white,
                       ),
                     ),
                   )
