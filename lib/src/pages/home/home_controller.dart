@@ -4,9 +4,9 @@ import '../../models/book.dart';
 import '../../repositories/api_repository.dart';
 
 class HomeController {
-  HomeController(this.repository);
+  HomeController(this._repository);
 
-  final BooksRepository repository;
+  final BooksRepository _repository;
 
   final books = ValueNotifier<List<Book>>(<Book>[]);
 
@@ -17,7 +17,7 @@ class HomeController {
   Future<void> get() async {
     isLoading.value = true;
     try {
-      books.value = await repository.get();
+      books.value = await _repository.get();
     } on Exception catch (e) {
       error.value = e.toString();
       debugPrint(e.toString());
