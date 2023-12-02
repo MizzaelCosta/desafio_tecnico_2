@@ -1,4 +1,4 @@
-import 'package:desafio_tecnico_2/src/repositories/api_repository_dio.dart';
+import 'package:desafio_tecnico_2/src/repositories/api/book_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

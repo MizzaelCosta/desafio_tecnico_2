@@ -37,6 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   dio: ^5.3.4
   provider: ^6.1.1
+  hive: ^2.2.3
+  path_provider: ^2.1.1
+  epub_view: ^3.2.0
+  internet_file: ^1.2.0
+  #vocsy_epub_viewer: ^2.0.0
   
 
 dev_dependencies:

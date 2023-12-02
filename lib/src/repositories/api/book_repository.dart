@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 
-import '../models/book.dart';
-import 'api_repository.dart';
+import '../../models/book.dart';
+
+abstract class BooksRepository {
+  Future<List<Book>> get();
+}
 
 class BooksRepositoryDio implements BooksRepository {
   const BooksRepositoryDio(this.dio);

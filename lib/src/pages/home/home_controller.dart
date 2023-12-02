@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/book.dart';
-import '../../repositories/api_repository.dart';
+import '../../repositories/api/book_repository.dart';
 
 class HomeController {
   HomeController(this._repository);

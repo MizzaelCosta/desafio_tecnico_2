@@ -1,3 +1,4 @@
+import 'package:desafio_tecnico_2/src/pages/read/read_book_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -63,9 +64,7 @@ class _HomePageState extends State<HomePage> {
             }
             if (controller.error.value.isNotEmpty) {
               return Center(
-                child: Expanded(
-                    child: Text(
-                        key: const Key('error-key'), controller.error.value)),
+                child: Expanded(child: Text(controller.error.value)),
               );
             }
             return GridView.builder(
@@ -76,7 +75,17 @@ class _HomePageState extends State<HomePage> {
                 debugPrint('GridView.builder');
                 final book = controller.books.value[index];
 
-                return BookView(book: book);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ReadBookPage(book),
+                      ),
+                    );
+                  },
+                  child: BookView(book: book),
+                );
               },
             );
           },

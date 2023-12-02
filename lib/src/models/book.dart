@@ -8,6 +8,7 @@ class Book {
     required this.author,
     required this.imageUrl,
     required this.downloadUrl,
+    this.epub,
     required this.favorite,
   });
 
@@ -16,7 +17,20 @@ class Book {
   final String author;
   final String imageUrl;
   final String downloadUrl;
+  final dynamic epub;
   final bool favorite;
+
+  factory Book.empty() {
+    return const Book(
+      id: 0,
+      title: '',
+      author: '',
+      imageUrl: '',
+      downloadUrl: '',
+      epub: null,
+      favorite: false,
+    );
+  }
 
   Book copyWith({
     int? id,
@@ -24,6 +38,7 @@ class Book {
     String? author,
     String? imageUrl,
     String? downloadUrl,
+    dynamic epub,
     bool? favorite,
   }) {
     return Book(
@@ -32,6 +47,7 @@ class Book {
       author: author ?? this.author,
       imageUrl: imageUrl ?? this.imageUrl,
       downloadUrl: downloadUrl ?? this.downloadUrl,
+      epub: epub ?? this.epub,
       favorite: favorite ?? this.favorite,
     );
   }
@@ -43,6 +59,7 @@ class Book {
       'author': author,
       'imageUrl': imageUrl,
       'downloadUrl': downloadUrl,
+      'epub': epub,
       'favorite': favorite,
     };
   }
@@ -54,7 +71,8 @@ class Book {
       author: map['author'] as String,
       imageUrl: map['cover_url'] as String,
       downloadUrl: map['download_url'] as String,
-      favorite: false,
+      epub: map['epub'] as dynamic,
+      favorite: map['favorite'] ?? false,
     );
   }
 
@@ -65,7 +83,7 @@ class Book {
 
   @override
   String toString() {
-    return 'Book(id: $id, title: $title, author: $author, imageUrl: $imageUrl, downloadUrl: $downloadUrl, favorite: $favorite)';
+    return 'Book(id: $id, title: $title, author: $author, imageUrl: $imageUrl, downloadUrl: $downloadUrl, epub: $epub, favorite: $favorite)';
   }
 
   @override
@@ -77,6 +95,7 @@ class Book {
         other.author == author &&
         other.imageUrl == imageUrl &&
         other.downloadUrl == downloadUrl &&
+        other.epub == epub &&
         other.favorite == favorite;
   }
 
@@ -87,6 +106,7 @@ class Book {
         author.hashCode ^
         imageUrl.hashCode ^
         downloadUrl.hashCode ^
+        epub.hashCode ^
         favorite.hashCode;
   }
 }

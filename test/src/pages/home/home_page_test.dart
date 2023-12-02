@@ -1,7 +1,7 @@
 import 'package:desafio_tecnico_2/src/constants/color.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_controller.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_page.dart';
-import 'package:desafio_tecnico_2/src/repositories/api_repository_dio.dart';
+import 'package:desafio_tecnico_2/src/repositories/api/book_repository.dart';
 import 'package:desafio_tecnico_2/src/widgets/app_buttom.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
-import '../../repositories/api_repository_dio_test.dart';
+import '../../repositories/book_repository_test.dart';
 
 void main() {
   final dio = DioMock();
