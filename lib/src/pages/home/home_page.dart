@@ -26,6 +26,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //TODO: adicionar um "LayoutBuilder" para
     //gerenciar o numero de colunas no "GridView.builder"

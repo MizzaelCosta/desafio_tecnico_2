@@ -27,4 +27,10 @@ class HomeController {
     }
     isLoading.value = false;
   }
+
+  void dispose() {
+    error.dispose();
+    isLoading.dispose();
+    books.dispose();
+  }
 }

@@ -41,4 +41,10 @@ class ReadBookController {
     }
     isLoading.value = false;
   }
+
+  void dispose() {
+    error.dispose();
+    isLoading.dispose();
+    bookContent.dispose();
+  }
 }
