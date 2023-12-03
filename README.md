@@ -79,6 +79,10 @@ Antes de começar Certifique-se de ter:
    code . 
    ```  
 
+4. Instale as dependências: 
+   ```sh
+   flutter pub get
+   
 
 4. Execute: 
    ```sh
