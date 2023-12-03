@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
 
+import '../../../mocks/constants.dart';
+
 void main() {
-  final book = Book.fromMap(map);
+  final book = Book.fromMap(mapWithOneBook);
 
   final widget = MaterialApp(
     home: Scaffold(
@@ -119,12 +121,3 @@ void main() {
     },
   );
 }
-
-const map = {
-  "id": 1,
-  "title": "The Bible of Nature",
-  "author": "Oswald, Felix L.",
-  "cover_url":
-      "https://www.gutenberg.org/cache/epub/72134/pg72134.cover.medium.jpg",
-  "download_url": "https://www.gutenberg.org/ebooks/72134.epub3.images"
-};

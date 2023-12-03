@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const widget = MaterialApp(
-    home: TestAppButtom(),
+    home: _TestAppButtom(),
   );
 
   testWidgets(
@@ -43,16 +43,14 @@ void main() {
   );
 }
 
-class TestAppButtom extends StatefulWidget {
-  const TestAppButtom({
-    super.key,
-  });
+class _TestAppButtom extends StatefulWidget {
+  const _TestAppButtom();
 
   @override
-  State<TestAppButtom> createState() => _TestAppButtomState();
+  State<_TestAppButtom> createState() => _TestAppButtomState();
 }
 
-class _TestAppButtomState extends State<TestAppButtom> {
+class _TestAppButtomState extends State<_TestAppButtom> {
   String text = 'initial';
 
   update() {

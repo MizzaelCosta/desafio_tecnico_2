@@ -1,6 +1,7 @@
 import 'package:desafio_tecnico_2/src/constants/color.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_controller.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_page.dart';
+import 'package:desafio_tecnico_2/src/pages/read/read_book_controller.dart';
 import 'package:desafio_tecnico_2/src/repositories/api/book_repository.dart';
 import 'package:desafio_tecnico_2/src/widgets/app_buttom.dart';
 import 'package:dio/dio.dart';
@@ -9,21 +10,31 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
-import '../../repositories/book_repository_test.dart';
+import '../../mocks/classes.dart';
+import '../../mocks/constants.dart';
 
 void main() {
   final dio = DioMock();
-  final repository = BooksRepositoryDio(dio);
-  final controller = HomeController(repository);
-  final widget = Provider<HomeController>(
-    create: (_) => controller,
-    child: const MaterialApp(home: HomePage()),
-  );
+  final requestOptions = RequestOptions();
+  final apiBooks = BooksRepositoryDio(dio);
+  final apiEpub = EpubRepositoryMock();
+  final storage = LocalStorageMock();
 
   testWidgets(
     'deve encontrar a "appBar.backgroundColor" igual a "lilac"',
     (tester) async {
-      await tester.pumpWidget(widget);
+      final home1 = HomeController(apiBooks);
+      final read1 = ReadBookController(storage, apiEpub);
+      final widget1 = MultiProvider(
+        providers: [
+          Provider<HomeController>(create: (_) => home1),
+          Provider<ReadBookController>(create: (_) => read1),
+        ],
+        child: const MaterialApp(
+          home: HomePage(),
+        ),
+      );
+      await tester.pumpWidget(widget1);
 
       final finder = find.byType(AppBar);
       final appBar = tester.widget<AppBar>(finder);
@@ -35,7 +46,22 @@ void main() {
   testWidgets(
     'deve encontrar 2(dois) botões na "appBar"',
     (tester) async {
-      await tester.pumpWidget(widget);
+      final home2 = HomeController(apiBooks);
+      final read2 = ReadBookController(storage, apiEpub);
+      final widget2 = MultiProvider(
+        providers: [
+          Provider<HomeController>(create: (_) => home2),
+          Provider<ReadBookController>(create: (_) => read2),
+        ],
+        child: const MaterialApp(home: HomePage()),
+      );
+
+      when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
+          (_) async => Response(
+              data: listOfTenBooksMaps,
+              statusCode: 200,
+              requestOptions: requestOptions));
+      await tester.pumpWidget(widget2);
 
       final appButtom = find.byType(AppButtom);
       expect(appButtom, findsNWidgets(2));
@@ -45,14 +71,25 @@ void main() {
   testWidgets(
     'description',
     (tester) async {
-      final requestOptions = RequestOptions();
+      final home3 = HomeController(apiBooks);
+      final read3 = ReadBookController(storage, apiEpub);
+      final widget3 = MultiProvider(
+        providers: [
+          Provider<HomeController>(create: (_) => home3),
+          Provider<ReadBookController>(create: (_) => read3),
+        ],
+        child: const MaterialApp(home: HomePage()),
+      );
+
       when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
           (_) async => Response(
-              data: data, statusCode: 200, requestOptions: requestOptions));
+              data: listOfTenBooksMaps,
+              statusCode: 200,
+              requestOptions: requestOptions));
 
-      await tester.pumpWidget(widget);
+      await tester.pumpWidget(widget3);
 
-      final length = controller.books.value.length;
+      final length = home3.books.value.length;
       expect(length, equals(10));
       //TODO: Procurar o "books" na tela
     },
@@ -61,14 +98,26 @@ void main() {
   testWidgets(
     'deve exibir "controller.error" na tela.',
     (tester) async {
+      final home4 = HomeController(apiBooks);
+      final read4 = ReadBookController(storage, apiEpub);
+      final widget4 = MultiProvider(
+        providers: [
+          Provider<HomeController>(create: (_) => home4),
+          Provider<ReadBookController>(create: (_) => read4),
+        ],
+        child: const MaterialApp(home: HomePage()),
+      );
+
       final requestOptions = RequestOptions();
       when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
           (_) async => Response(
-              data: data, statusCode: 404, requestOptions: requestOptions));
+              data: listOfTenBooksMaps,
+              statusCode: 404,
+              requestOptions: requestOptions));
 
-      await tester.pumpWidget(widget);
+      await tester.pumpWidget(widget4);
 
-      final error = controller.error;
+      final error = home4.error;
       expect(error.value, equals('Exception: Erro ao carregar.'));
       //TODO: Procurar o "error" na tela
     },

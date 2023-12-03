@@ -4,7 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
-import '../../repositories/book_repository_test.dart';
+import '../../mocks/classes.dart';
+import '../../mocks/constants.dart';
 
 void main() {
   final dio = DioMock();
@@ -17,7 +18,9 @@ void main() {
     () async {
       when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
           (_) async => Response(
-              data: data, statusCode: 200, requestOptions: requestOptions));
+              data: listOfTenBooksMaps,
+              statusCode: 200,
+              requestOptions: requestOptions));
 
       await controller.get();
 
@@ -31,7 +34,9 @@ void main() {
     () async {
       when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
           (_) async => Response(
-              data: data, statusCode: 404, requestOptions: requestOptions));
+              data: listOfTenBooksMaps,
+              statusCode: 404,
+              requestOptions: requestOptions));
 
       await controller.get();
 
@@ -45,7 +50,9 @@ void main() {
     () async {
       when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
           (_) async => Response(
-              data: data, statusCode: 200, requestOptions: requestOptions));
+              data: listOfTenBooksMaps,
+              statusCode: 200,
+              requestOptions: requestOptions));
 
       final before = controller.isLoading.value;
       controller.get();
