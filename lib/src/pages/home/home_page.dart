@@ -1,9 +1,10 @@
-import 'package:desafio_tecnico_2/src/pages/read/read_book_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../constants/color.dart';
 import '../../widgets/app_buttom.dart';
+import '../read/read_book_controller.dart';
+import '../read/read_book_page.dart';
 import 'components/book_view.dart';
 import 'home_controller.dart';
 
@@ -17,17 +18,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late HomeController controller;
+  late HomeController _controller;
+  late ReadBookController _dispose;
 
   @override
   void initState() {
     super.initState();
-    controller = context.read<HomeController>()..get();
+    _controller = context.read<HomeController>()..get();
+    _dispose = context.read<ReadBookController>();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    _dispose.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -54,32 +58,39 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: AnimatedBuilder(
-          animation: Listenable.merge(
+        child: ListenableBuilder(
+          listenable: Listenable.merge(
             [
-              controller.books,
-              controller.isLoading,
-              controller.error,
+              _controller.books,
+              _controller.isLoading,
+              _controller.error,
             ],
           ),
           builder: (__, _) {
-            if (controller.isLoading.value) {
+            if (_controller.isLoading.value) {
               return const Center(
-                child: CircularProgressIndicator(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Baixando...'),
+                    SizedBox(height: 16),
+                    CircularProgressIndicator(),
+                  ],
+                ),
               );
             }
-            if (controller.error.value.isNotEmpty) {
+            if (_controller.error.value.isNotEmpty) {
               return Center(
-                child: Expanded(child: Text(controller.error.value)),
+                child: Expanded(child: Text(_controller.error.value)),
               );
             }
             return GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2),
-              itemCount: controller.books.value.length,
+              itemCount: _controller.books.value.length,
               itemBuilder: (_, index) {
                 debugPrint('GridView.builder');
-                final book = controller.books.value[index];
+                final book = _controller.books.value[index];
 
                 return GestureDetector(
                   onTap: () {

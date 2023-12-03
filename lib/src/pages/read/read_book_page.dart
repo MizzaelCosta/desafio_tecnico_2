@@ -27,19 +27,23 @@ class _ReadBookPageState extends State<ReadBookPage> {
   }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text(widget.book.title),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.favorite,
+              color: red,
+            ),
+            onPressed: () {},
+          )
+        ],
         backgroundColor: lilac,
       ),
-      body: AnimatedBuilder(
-        animation: Listenable.merge(
+      body: ListenableBuilder(
+        listenable: Listenable.merge(
           [
             controller.bookContent,
             controller.isLoading,
@@ -49,7 +53,14 @@ class _ReadBookPageState extends State<ReadBookPage> {
         builder: (__, _) {
           if (controller.isLoading.value) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('carregendo...'),
+                  SizedBox(height: 16),
+                  CircularProgressIndicator(),
+                ],
+              ),
             );
           }
           if (controller.error.value.isNotEmpty) {
