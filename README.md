@@ -29,7 +29,7 @@ Funcionalidades Requeridas:
    - Utilizar o plugin [Vocsy Epub Viewer](https://pub.dev/packages/vocsy_epub_viewer) para exibir o conteúdo do livro.
 - [x] 5. Navegação de Interface:
    - Incluir um botão para que o usuário possa retornar facilmente à estante de livros durante a leitura.
-- [ ] 6. Favoritos (feature bônus) **Em desenvolvimento*
+- [x] 6. Favoritos (feature bônus)
   - Criar uma aba de favoritos acima do app. Ao tocar em Favoritos serão exibidos apenas os livros favoritos.
   - Para favoritar um livro, na estante inicial, o usuário toca no marcador no canto superior direito. Essa informação deve ser persistida para quando o usuário voltar para o app.
   - Em um livro favorito, o marcador aparece em vermelho. Se tocar no marcador já acionado, ele apaga e o livro é removido da lista de favoritos.
@@ -50,6 +50,16 @@ Funcionalidades Requeridas:
 - Estrutura e organização do código.
 - Histórico de commits no repositório GitHub.
 
+
+
+### Demonstração
+
+<p>
+<img src="assets/image/allBooks.jpg" width="20%">
+<img src="assets/image/favorites.jpg" width="20%">  
+<img src="assets/image/bookView.jpg" width="20%">
+<img src="assets/movie/recordScreen.gif" width="25%">
+</p>
 
 
 
@@ -82,7 +92,7 @@ Antes de começar Certifique-se de ter:
 4. Instale as dependências: 
    ```sh
    flutter pub get
-   
+   ```
 
 4. Execute: 
    ```sh
