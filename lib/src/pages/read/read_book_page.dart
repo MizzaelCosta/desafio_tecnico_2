@@ -2,7 +2,6 @@ import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../constants/color.dart';
 import '../../models/book.dart';
 import 'read_book_controller.dart';
 
@@ -18,40 +17,28 @@ class ReadBookPage extends StatefulWidget {
 }
 
 class _ReadBookPageState extends State<ReadBookPage> {
-  late ReadBookController controller;
+  late ReadBookController _controller;
 
   @override
   void initState() {
     super.initState();
-    controller = context.read<ReadBookController>()..get(widget.book);
+    _controller = context.read<ReadBookController>()..get(widget.book);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.book.title),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.favorite,
-              color: red,
-            ),
-            onPressed: () {},
-          )
-        ],
-        backgroundColor: lilac,
-      ),
+      appBar: AppBar(),
       body: ListenableBuilder(
         listenable: Listenable.merge(
           [
-            controller.bookContent,
-            controller.isLoading,
-            controller.error,
+            _controller.bookContent,
+            _controller.isLoading,
+            _controller.error,
           ],
         ),
         builder: (__, _) {
-          if (controller.isLoading.value) {
+          if (_controller.isLoading.value) {
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -63,15 +50,16 @@ class _ReadBookPageState extends State<ReadBookPage> {
               ),
             );
           }
-          if (controller.error.value.isNotEmpty) {
+          if (_controller.error.value.isNotEmpty) {
             return Center(
-              child: Expanded(child: Text(controller.error.value)),
+              child: Expanded(child: Text(_controller.error.value)),
             );
           }
           return EpubView(
             controller: EpubController(
-                document:
-                    EpubDocument.openData(controller.bookContent.value.epub)),
+              document:
+                  EpubDocument.openData(_controller.bookContent.value.epub),
+            ),
           );
         },
       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../constants/color.dart';
 import '../../../models/book.dart';
+import '../home_controller.dart';
 
 class BookView extends StatelessWidget {
   const BookView({
@@ -13,6 +15,8 @@ class BookView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.read<HomeController>();
+
     return Card(
       color: white,
       elevation: 0,
@@ -32,14 +36,24 @@ class BookView extends StatelessWidget {
                   ),
                   Positioned(
                     right: 0,
-                    child: ClipPath(
-                      clipper: _Clip(),
-                      child: Container(
-                        key: Key('favorite-key:${book.id}'),
-                        height: 25,
-                        width: 15,
-                        color: (book.favorite) ? red : white,
-                      ),
+                    child: ListenableBuilder(
+                      listenable: controller.books,
+                      builder: (context, _) {
+                        return GestureDetector(
+                          child: ClipPath(
+                            clipper: _Clip(),
+                            child: Container(
+                              key: Key('favorite-key:${book.id}'),
+                              height: 35,
+                              width: 25,
+                              color: (book.favorite) ? red : white,
+                            ),
+                          ),
+                          onTap: () {
+                            controller.setFavorite(book);
+                          },
+                        );
+                      },
                     ),
                   )
                 ],

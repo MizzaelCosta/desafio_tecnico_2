@@ -17,7 +17,8 @@ class App extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<HomeController>(
-            create: (_) => HomeController(BooksRepositoryDio(Dio()))),
+            create: (_) =>
+                HomeController(BooksRepositoryDio(Dio()), LocalStorageHive())),
         Provider<ReadBookController>(
             create: (_) =>
                 ReadBookController(LocalStorageHive(), EpubRepositoryImpl())),

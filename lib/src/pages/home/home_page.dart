@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _controller = context.read<HomeController>()..get();
+    _controller = context.read<HomeController>()..init();
     _dispose = context.read<ReadBookController>();
   }
 
@@ -46,11 +46,15 @@ class _HomePageState extends State<HomePage> {
           children: [
             AppButtom(
               label: 'Livros',
-              onPressed: () {},
+              onPressed: () {
+                _controller.showBooks();
+              },
             ),
             AppButtom(
               label: 'Favoritos',
-              onPressed: () {},
+              onPressed: () {
+                _controller.showFavorite();
+              },
             ),
           ],
         ),
@@ -64,6 +68,7 @@ class _HomePageState extends State<HomePage> {
               _controller.books,
               _controller.isLoading,
               _controller.error,
+              _controller.favorite,
             ],
           ),
           builder: (__, _) {

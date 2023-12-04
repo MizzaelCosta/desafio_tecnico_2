@@ -1,19 +1,29 @@
 import 'package:desafio_tecnico_2/src/constants/color.dart';
 import 'package:desafio_tecnico_2/src/models/book.dart';
 import 'package:desafio_tecnico_2/src/pages/home/components/book_view.dart';
+import 'package:desafio_tecnico_2/src/pages/home/home_controller.dart';
+import 'package:desafio_tecnico_2/src/repositories/api/book_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail_image_network/mocktail_image_network.dart';
+import 'package:provider/provider.dart';
 
+import '../../../mocks/classes.dart';
 import '../../../mocks/constants.dart';
 
 void main() {
   final book = Book.fromMap(mapWithOneBook);
-
-  final widget = MaterialApp(
-    home: Scaffold(
-      body: BookView(
-        book: book,
+  final dio = DioMock();
+  final repository = BooksRepositoryDio(dio);
+  final storage = LocalStorageMock();
+  final controller = HomeController(repository, storage);
+  final widget = Provider<HomeController>(
+    create: (_) => controller,
+    child: MaterialApp(
+      home: Scaffold(
+        body: BookView(
+          book: book,
+        ),
       ),
     ),
   );
@@ -101,9 +111,12 @@ void main() {
         'deve encontrar a cor vermelha na marcação de favorito(favorite: true)',
         (tester) async {
           final favorite = book.copyWith(id: 2, favorite: true);
-          final widget2 = MaterialApp(
-            home: BookView(
-              book: favorite,
+          final widget2 = Provider(
+            create: (_) => controller,
+            child: MaterialApp(
+              home: BookView(
+                book: favorite,
+              ),
             ),
           );
 

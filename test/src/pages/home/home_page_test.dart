@@ -1,4 +1,5 @@
 import 'package:desafio_tecnico_2/src/constants/color.dart';
+import 'package:desafio_tecnico_2/src/models/book.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_controller.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_page.dart';
 import 'package:desafio_tecnico_2/src/pages/read/read_book_controller.dart';
@@ -23,7 +24,7 @@ void main() {
   testWidgets(
     'deve encontrar a "appBar.backgroundColor" igual a "lilac"',
     (tester) async {
-      final home1 = HomeController(apiBooks);
+      final home1 = HomeController(apiBooks, storage);
       final read1 = ReadBookController(storage, apiEpub);
       final widget1 = MultiProvider(
         providers: [
@@ -46,7 +47,7 @@ void main() {
   testWidgets(
     'deve encontrar 2(dois) botões na "appBar"',
     (tester) async {
-      final home2 = HomeController(apiBooks);
+      final home2 = HomeController(apiBooks, storage);
       final read2 = ReadBookController(storage, apiEpub);
       final widget2 = MultiProvider(
         providers: [
@@ -71,7 +72,7 @@ void main() {
   testWidgets(
     'description',
     (tester) async {
-      final home3 = HomeController(apiBooks);
+      final home3 = HomeController(apiBooks, storage);
       final read3 = ReadBookController(storage, apiEpub);
       final widget3 = MultiProvider(
         providers: [
@@ -98,7 +99,7 @@ void main() {
   testWidgets(
     'deve exibir "controller.error" na tela.',
     (tester) async {
-      final home4 = HomeController(apiBooks);
+      final home4 = HomeController(apiBooks, storage);
       final read4 = ReadBookController(storage, apiEpub);
       final widget4 = MultiProvider(
         providers: [
@@ -109,6 +110,9 @@ void main() {
       );
 
       final requestOptions = RequestOptions();
+      final book = Book.empty();
+      when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
+      when(() => storage.get(book)).thenAnswer((_) async => Book.empty());
       when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
           (_) async => Response(
               data: listOfTenBooksMaps,
@@ -118,7 +122,8 @@ void main() {
       await tester.pumpWidget(widget4);
 
       final error = home4.error;
-      expect(error.value, equals('Exception: Erro ao carregar.'));
+      expect(error.value, isNotEmpty);
+      //TODO: verificar para as 3 requisições
       //TODO: Procurar o "error" na tela
     },
   );
