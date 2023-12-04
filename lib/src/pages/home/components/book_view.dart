@@ -26,7 +26,7 @@ class BookView extends StatelessWidget {
                 children: [
                   ClipRect(
                     child: Image.network(
-                      book.imageUrl,
+                      book.cover_url,
                       fit: BoxFit.cover,
                     ),
                   ),

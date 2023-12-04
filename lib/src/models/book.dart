@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
 
 class Book {
@@ -6,8 +6,8 @@ class Book {
     required this.id,
     required this.title,
     required this.author,
-    required this.imageUrl,
-    required this.downloadUrl,
+    required this.cover_url,
+    required this.download_url,
     this.epub,
     required this.favorite,
   });
@@ -15,8 +15,8 @@ class Book {
   final int id;
   final String title;
   final String author;
-  final String imageUrl;
-  final String downloadUrl;
+  final String cover_url;
+  final String download_url;
   final dynamic epub;
   final bool favorite;
 
@@ -25,8 +25,8 @@ class Book {
       id: 0,
       title: '',
       author: '',
-      imageUrl: '',
-      downloadUrl: '',
+      cover_url: '',
+      download_url: '',
       epub: null,
       favorite: false,
     );
@@ -36,8 +36,8 @@ class Book {
     int? id,
     String? title,
     String? author,
-    String? imageUrl,
-    String? downloadUrl,
+    String? cover_url,
+    String? download_url,
     dynamic epub,
     bool? favorite,
   }) {
@@ -45,32 +45,32 @@ class Book {
       id: id ?? this.id,
       title: title ?? this.title,
       author: author ?? this.author,
-      imageUrl: imageUrl ?? this.imageUrl,
-      downloadUrl: downloadUrl ?? this.downloadUrl,
+      cover_url: cover_url ?? this.cover_url,
+      download_url: download_url ?? this.download_url,
       epub: epub ?? this.epub,
       favorite: favorite ?? this.favorite,
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<dynamic, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
       'title': title,
       'author': author,
-      'imageUrl': imageUrl,
-      'downloadUrl': downloadUrl,
+      'cover_url': cover_url,
+      'download_url': download_url,
       'epub': epub,
       'favorite': favorite,
     };
   }
 
-  factory Book.fromMap(Map<String, dynamic> map) {
+  factory Book.fromMap(Map<dynamic, dynamic> map) {
     return Book(
       id: map['id'] as int,
       title: map['title'] as String,
       author: map['author'] as String,
-      imageUrl: map['cover_url'] as String,
-      downloadUrl: map['download_url'] as String,
+      cover_url: map['cover_url'] as String,
+      download_url: map['download_url'] as String,
       epub: map['epub'] as dynamic,
       favorite: map['favorite'] ?? false,
     );
@@ -83,7 +83,7 @@ class Book {
 
   @override
   String toString() {
-    return 'Book(id: $id, title: $title, author: $author, imageUrl: $imageUrl, downloadUrl: $downloadUrl, epub: $epub, favorite: $favorite)';
+    return 'Book(id: $id, title: $title, author: $author, cover_url: $cover_url, download_url: $download_url, epub: $epub, favorite: $favorite)';
   }
 
   @override
@@ -93,8 +93,8 @@ class Book {
     return other.id == id &&
         other.title == title &&
         other.author == author &&
-        other.imageUrl == imageUrl &&
-        other.downloadUrl == downloadUrl &&
+        other.cover_url == cover_url &&
+        other.download_url == download_url &&
         other.epub == epub &&
         other.favorite == favorite;
   }
@@ -104,8 +104,8 @@ class Book {
     return id.hashCode ^
         title.hashCode ^
         author.hashCode ^
-        imageUrl.hashCode ^
-        downloadUrl.hashCode ^
+        cover_url.hashCode ^
+        download_url.hashCode ^
         epub.hashCode ^
         favorite.hashCode;
   }

@@ -14,7 +14,7 @@ class LocalStorageHive extends LocalStorage {
   @override
   Future<Uint8List?> get(Book book) async {
     final storage = await Hive.openBox(boxName);
-    final epub = storage.get(book.downloadUrl);
+    final epub = storage.get(book.download_url);
     if (epub == null) {
       return null;
     }
@@ -26,6 +26,6 @@ class LocalStorageHive extends LocalStorage {
   Future<void> put(Book book) async {
     final storage = await Hive.openBox(boxName);
 
-    storage.put(book.downloadUrl, book.epub);
+    storage.put(book.download_url, book.epub);
   }
 }
