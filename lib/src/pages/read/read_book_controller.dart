@@ -19,18 +19,19 @@ class ReadBookController {
 
   final error = ValueNotifier<String>('');
 
-  Future<dynamic> get(Book book) async {
+  Future<void> get(Book book) async {
     isLoading.value = true;
     try {
-      var epub = await _storage.get(book);
+      final fromStorage = await _storage.get(book);
 
-      if (epub == null) {
-        epub = await _repository.get(book.downloadUrl);
-
+      if (fromStorage?.epub == null) {
+        final epub = await _repository.get(book.download_url);
         bookContent.value = book.copyWith(epub: epub);
+
         await _storage.put(bookContent.value);
+      } else {
+        bookContent.value = book.copyWith(epub: fromStorage?.epub);
       }
-      bookContent.value = book.copyWith(epub: epub);
       //
     } on Exception catch (e) {
       error.value = e.toString();
