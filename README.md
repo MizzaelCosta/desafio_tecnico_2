@@ -23,6 +23,11 @@ Funcionalidades Requeridas:
    - O aplicativo deve acessar uma API para baixar uma lista atualizada de livros e suas respectivas capas.
 - [x] 2. Estante de Livros:
    - Exibir as capas dos livros baixados de forma organizada em uma estante virtual.
+
+<h1 align="center">
+<img alt="Estante virtual"  title="Estante virtual" src="assets/image/layout1.jpeg" width="60%">
+</h1>
+
 - [x] 3. Download e Armazenamento de Livros:
    - Permitir que o usuário baixe um livro ao tocar em sua capa e salve o arquivo no dispositivo.
 - [x] 4. Exibição de Livros:
@@ -34,10 +39,11 @@ Funcionalidades Requeridas:
   - Para favoritar um livro, na estante inicial, o usuário toca no marcador no canto superior direito. Essa informação deve ser persistida para quando o usuário voltar para o app.
   - Em um livro favorito, o marcador aparece em vermelho. Se tocar no marcador já acionado, ele apaga e o livro é removido da lista de favoritos.
 
+<h1 align="center">
+<img alt="Favoritos"  title="Favoritos" src="assets/image/layout2.jpeg" width="20%">
+</h1>
 
-
-
-#### Requisitos técnicos
+### Requisitos técnicos
 
 - O teste deve ser realizado usando Dart/Flutter na versão 3.16 ou superior.
 - Organizar o código seguindo os princípios SOLID e as melhores práticas de programação.
