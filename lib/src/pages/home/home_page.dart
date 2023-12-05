@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
             }
             if (_controller.error.value.isNotEmpty) {
               return Center(
-                child: Expanded(child: Text(_controller.error.value)),
+                child: Text(_controller.error.value),
               );
             }
             return GridView.builder(
