@@ -14,14 +14,17 @@ class BooksRepositoryDio implements BooksRepository {
 
   @override
   Future<List<Book>> get() async {
-    const url = 'https://escribo.com/books.json';
-    final books = <Book>[];
     try {
+      var books = <Book>[];
+      const url = 'https://escribo.com/books.json';
+
       final response = await dio.get(url);
 
       if (response.statusCode == 200) {
-        for (var book in response.data!) {
-          books.add(Book.fromMap(book));
+        if (response.data != null) {
+          books = (response.data! as List)
+              .map<Book>((map) => Book.fromMap(map))
+              .toList();
         }
       } else {
         throw DioException(
@@ -29,11 +32,9 @@ class BooksRepositoryDio implements BooksRepository {
             response: response,
             type: DioExceptionType.badResponse);
       }
+      return books;
     } on DioException catch (exception) {
-      throw BooksRepositoryDioException().checkException(exception);
-    } catch (e) {
-      throw BooksRepositoryDioException(message: 'Ocorreu um erro inesperado');
+      throw BooksRepositoryDioException.exceptionMessage(exception);
     }
-    return books;
   }
 }

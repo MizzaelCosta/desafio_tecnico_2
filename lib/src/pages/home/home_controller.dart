@@ -1,3 +1,4 @@
+import 'package:desafio_tecnico_2/src/exceptions/exception_handles.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/book.dart';
@@ -20,18 +21,12 @@ class HomeController {
 
   Future<void> init() async {
     isLoading.value = true;
-    try {
-      await _booksFromStorage();
-      if (books.value.isEmpty) {
-        await _booksFromApi();
+    await _booksFromStorage();
+    if (books.value.isEmpty) {
+      await _booksFromApi();
+      if (books.value.isNotEmpty) {
         await _booksToStorage();
       }
-    } on Exception catch (e) {
-      error.value = e.toString();
-      debugPrint(e.toString());
-    } catch (e) {
-      error.value = e.toString();
-      debugPrint(e.toString());
     }
     isLoading.value = false;
   }
@@ -51,10 +46,13 @@ class HomeController {
   Future<void> _booksFromApi() async {
     try {
       _setBooks(await _repository.get());
-    } on Exception catch (e) {
-      error.value = e.toString();
-      debugPrint(e.toString());
+    } on ExceptionHandled catch (exception) {
+      error.value = exception.message;
+      debugPrint(exception.toString());
     } catch (e) {
+      //TODO: mandar pro crashlytics
+      //Se recebido erro não esperado
+      //não tratar. Enviá-lo!
       error.value = e.toString();
       debugPrint(e.toString());
     }

@@ -1,31 +1,40 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dio/dio.dart';
 
-class BooksRepositoryException implements Exception {
-  BooksRepositoryException({this.message});
+import '../exception_handles.dart';
 
-  final String? message;
+class BooksRepositoryException extends ExceptionHandled {
+  BooksRepositoryException(super.message);
 }
 
 class BooksRepositoryDioException extends BooksRepositoryException {
-  BooksRepositoryDioException({super.message});
+  BooksRepositoryDioException(super.message);
 
-  String checkException(DioException exception) {
+  factory BooksRepositoryDioException.exceptionMessage(DioException exception) {
+    final message = _returnsMessageByExceptionType(exception);
+
+    return BooksRepositoryDioException(message);
+  }
+
+  static String _returnsMessageByExceptionType(DioException exception) {
     switch (exception.type) {
       case DioExceptionType.badResponse:
-        return 'Não foi possível conectar';
+        return 'Nenhum dado recebido';
 
       case DioExceptionType.connectionError:
-        return 'Erro na conexão. Verifique se está conectado à internet';
+        return 'Verifique se está conectado à internet';
 
       case DioExceptionType.connectionTimeout:
-        return 'Demorou para conectar. Verifique se está conectado à internet';
+        return 'Verifique se está conectado à internet';
 
       case DioExceptionType.receiveTimeout:
-        return 'Demorou para responder. Verifique se está conectado à internet';
+        return 'Verifique se está conectado à internet';
+
+      case DioExceptionType.sendTimeout:
+        return 'Verifique se está conectado à internet';
 
       default:
-        return 'Ocorreu um erro';
+        return 'Erro ao acessar API';
     }
   }
 }
