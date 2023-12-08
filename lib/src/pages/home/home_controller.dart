@@ -25,7 +25,7 @@ class HomeController {
     if (books.value.isEmpty) {
       await _booksFromApi();
       if (books.value.isNotEmpty) {
-        await _booksToStorage();
+        await _toStorageAll(books.value);
       }
     }
     isLoading.value = false;
@@ -58,9 +58,9 @@ class HomeController {
     }
   }
 
-  Future<void> _booksToStorage() async {
+  Future<void> _toStorageAll(List<Book> list) async {
     try {
-      await _storage.putAll(books.value);
+      await _storage.putAll(list);
     } on Exception catch (e) {
       error.value = e.toString();
       debugPrint(e.toString());
@@ -82,6 +82,10 @@ class HomeController {
     }
   }
 
+  void _sortList(List<Book> list) {
+    list.sort((a, b) => a.id.compareTo(b.id));
+  }
+
   void _setBooks(List<Book> list) {
     if (favorite.value) {
       final favorites = <Book>[];
@@ -90,12 +94,11 @@ class HomeController {
           favorites.add(book);
         }
       }
-      favorites.sort((a, b) => a.id.compareTo(b.id));
+      _sortList(favorites);
       books.value = favorites;
       return;
     }
-
-    list.sort((a, b) => a.id.compareTo(b.id));
+    _sortList(list);
     books.value = list;
   }
 
@@ -112,7 +115,13 @@ class HomeController {
   void setFavorite(Book book) async {
     book = book.copyWith(favorite: !book.favorite);
     await _toStorage(book);
-    await _booksFromStorage();
+    final list = books.value.map((e) {
+      if (e.id == book.id) {
+        e = e.copyWith(favorite: !e.favorite);
+      }
+      return e;
+    }).toList();
+    _setBooks(list);
   }
 
   void dispose() {

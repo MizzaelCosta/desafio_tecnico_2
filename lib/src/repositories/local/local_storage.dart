@@ -4,6 +4,8 @@ import 'package:hive/hive.dart';
 abstract class LocalStorage {
   Future<Book?> get(Book book);
   Future<void> put(Book book);
+  Future<List<Book>> getAll();
+  Future<void> putAll(List<Book> list);
 }
 
 class LocalStorageHive extends LocalStorage {
@@ -21,6 +23,7 @@ class LocalStorageHive extends LocalStorage {
     return Book.fromMap(map);
   }
 
+  @override
   Future<List<Book>> getAll() async {
     final storage = await Hive.openBox(boxName);
     final list = (storage.values).map((e) => Book.fromMap(e)).toList();
@@ -37,6 +40,7 @@ class LocalStorageHive extends LocalStorage {
     await storage.put(key, map);
   }
 
+  @override
   Future<void> putAll(List<Book> list) async {
     for (var book in list) {
       await put(book);
