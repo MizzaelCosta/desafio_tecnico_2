@@ -58,7 +58,7 @@ class _ReadBookPageState extends State<ReadBookPage> {
           return EpubView(
             controller: EpubController(
               document:
-                  EpubDocument.openData(_controller.bookContent.value.epub),
+                  EpubDocument.openData(_controller.bookContent.value.epub!),
             ),
           );
         },

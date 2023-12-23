@@ -28,11 +28,10 @@ class BookView extends StatelessWidget {
               flex: 8,
               child: Stack(
                 children: [
-                  ClipRect(
-                    child: Image.network(
-                      book.cover_url,
-                      fit: BoxFit.cover,
-                    ),
+                  ClipRRect(
+                    child: (book.coverImage == null)
+                        ? Image.asset('assets/image/cover.png')
+                        : Image.memory(book.coverImage!),
                   ),
                   Positioned(
                     right: 0,

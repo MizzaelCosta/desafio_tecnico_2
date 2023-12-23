@@ -1,6 +1,6 @@
-import 'package:desafio_tecnico_2/src/exceptions/exception_handles.dart';
 import 'package:flutter/material.dart';
 
+import '../../exceptions/exception_handles.dart';
 import '../../models/book.dart';
 import '../../repositories/api/book_repository.dart';
 import '../../repositories/local/local_storage.dart';
@@ -29,6 +29,7 @@ class HomeController {
       }
     }
     isLoading.value = false;
+    _setCoverImage(books.value);
   }
 
   Future<void> _booksFromStorage() async {
@@ -45,7 +46,7 @@ class HomeController {
 
   Future<void> _booksFromApi() async {
     try {
-      _setBooks(await _repository.get());
+      _setBooks(await _repository.getBooks());
     } on ExceptionHandled catch (exception) {
       error.value = exception.message;
       debugPrint(exception.toString());
@@ -103,13 +104,17 @@ class HomeController {
   }
 
   void showFavorite() {
-    favorite.value = true;
-    _setBooks(books.value);
+    if (!favorite.value) {
+      favorite.value = true;
+      _setBooks(books.value);
+    }
   }
 
   void showBooks() async {
-    favorite.value = false;
-    await _booksFromStorage();
+    if (favorite.value) {
+      favorite.value = false;
+      await _booksFromStorage();
+    }
   }
 
   void setFavorite(Book book) async {
@@ -128,5 +133,28 @@ class HomeController {
     error.dispose();
     isLoading.dispose();
     books.dispose();
+  }
+
+  Stream<List<Book>> _getImage(List<Book> list) async* {
+    for (Book e in list) {
+      yield [
+        e.copyWith(coverImage: await _repository.getCoverImage(e.cover_url))
+      ];
+    }
+  }
+
+  void _setCoverImage(List<Book> list) async {
+    final stream = _getImage(list);
+    await for (final strm in stream) {
+      _toStorageAll(strm);
+
+      final coverInserted = books.value.map((book) {
+        if (book.title == strm.first.title) {
+          book = book.copyWith(coverImage: strm.first.coverImage);
+        }
+        return book;
+      }).toList();
+      _setBooks(coverInserted);
+    }
   }
 }

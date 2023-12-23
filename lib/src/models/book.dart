@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
 import 'dart:convert';
+import 'dart:typed_data';
 
 class Book {
   const Book({
@@ -8,6 +9,7 @@ class Book {
     required this.author,
     required this.cover_url,
     required this.download_url,
+    this.coverImage,
     this.epub,
     required this.favorite,
   });
@@ -17,7 +19,8 @@ class Book {
   final String author;
   final String cover_url;
   final String download_url;
-  final dynamic epub;
+  final Uint8List? coverImage;
+  final Uint8List? epub;
   final bool favorite;
 
   factory Book.empty() {
@@ -27,7 +30,6 @@ class Book {
       author: '',
       cover_url: '',
       download_url: '',
-      epub: null,
       favorite: false,
     );
   }
@@ -38,7 +40,8 @@ class Book {
     String? author,
     String? cover_url,
     String? download_url,
-    dynamic epub,
+    Uint8List? coverImage,
+    Uint8List? epub,
     bool? favorite,
   }) {
     return Book(
@@ -47,6 +50,7 @@ class Book {
       author: author ?? this.author,
       cover_url: cover_url ?? this.cover_url,
       download_url: download_url ?? this.download_url,
+      coverImage: coverImage ?? this.coverImage,
       epub: epub ?? this.epub,
       favorite: favorite ?? this.favorite,
     );
@@ -59,6 +63,7 @@ class Book {
       'author': author,
       'cover_url': cover_url,
       'download_url': download_url,
+      'coverImage': coverImage,
       'epub': epub,
       'favorite': favorite,
     };
@@ -71,7 +76,8 @@ class Book {
       author: map['author'] as String,
       cover_url: map['cover_url'] as String,
       download_url: map['download_url'] as String,
-      epub: map['epub'] as dynamic,
+      coverImage: map['coverImage'],
+      epub: map['epub'],
       favorite: map['favorite'] ?? false,
     );
   }
@@ -83,7 +89,7 @@ class Book {
 
   @override
   String toString() {
-    return 'Book(id: $id, title: $title, author: $author, cover_url: $cover_url, download_url: $download_url, epub: $epub, favorite: $favorite)';
+    return 'Book(id: $id, title: $title, author: $author, cover_url: $cover_url, download_url: $download_url, coverImage: $coverImage, epub: $epub, favorite: $favorite)';
   }
 
   @override
@@ -95,6 +101,7 @@ class Book {
         other.author == author &&
         other.cover_url == cover_url &&
         other.download_url == download_url &&
+        other.coverImage == coverImage &&
         other.epub == epub &&
         other.favorite == favorite;
   }
@@ -106,6 +113,7 @@ class Book {
         author.hashCode ^
         cover_url.hashCode ^
         download_url.hashCode ^
+        coverImage.hashCode ^
         epub.hashCode ^
         favorite.hashCode;
   }
