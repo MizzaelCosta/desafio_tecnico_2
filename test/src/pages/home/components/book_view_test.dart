@@ -2,10 +2,8 @@ import 'package:desafio_tecnico_2/src/constants/color.dart';
 import 'package:desafio_tecnico_2/src/models/book.dart';
 import 'package:desafio_tecnico_2/src/pages/home/components/book_view.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_controller.dart';
-import 'package:desafio_tecnico_2/src/repositories/api/book_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail_image_network/mocktail_image_network.dart';
 import 'package:provider/provider.dart';
 
 import '../../../mocks/classes.dart';
@@ -14,7 +12,7 @@ import '../../../mocks/constants.dart';
 void main() {
   final book = Book.fromMap(mapWithOneBook);
   final dio = DioMock();
-  final repository = BooksRepositoryDio(dio);
+  final repository = BooksRepositoryDioMock(dio);
   final storage = LocalStorageHiveMock();
   final controller = HomeController(repository, storage);
   final widget = Provider<HomeController>(
@@ -31,45 +29,39 @@ void main() {
   testWidgets(
     'deve encontar o título e o autor do livro',
     (tester) async {
-      await mockNetworkImages(() async {
-        await tester.pumpWidget(widget);
+      await tester.pumpWidget(widget);
 
-        final titleFinder = find.text(book.title);
-        final title = tester.widget<Text>(titleFinder).data;
-        final authorFinder = find.text(book.author);
-        final author = tester.widget<Text>(authorFinder).data;
+      final titleFinder = find.text(book.title);
+      final title = tester.widget<Text>(titleFinder).data;
+      final authorFinder = find.text(book.author);
+      final author = tester.widget<Text>(authorFinder).data;
 
-        expect(title, equals("The Bible of Nature"));
-        expect(author, equals("Oswald, Felix L."));
-      });
+      expect(title, equals("The Bible of Nature"));
+      expect(author, equals("Oswald, Felix L."));
     },
   );
 
   testWidgets(
     'deve encontrar a capa do livro',
     (tester) async {
-      await mockNetworkImages(() async {
-        await tester.pumpWidget(widget);
+      await tester.pumpWidget(widget);
 
-        final image = find.byType(Image);
-        expect(image, findsOneWidget);
-      });
+      final image = find.byType(Image);
+      expect(image, findsOneWidget);
     },
   );
 
   testWidgets(
     'deve encontrar um card de "color" branca com "elevation" igual a 0(zero)',
     (tester) async {
-      await mockNetworkImages(() async {
-        await tester.pumpWidget(widget);
+      await tester.pumpWidget(widget);
 
-        final finder = find.byType(Card);
-        final card = tester.widget<Card>(finder);
+      final finder = find.byType(Card);
+      final card = tester.widget<Card>(finder);
 
-        expect(finder, findsOneWidget);
-        expect(card.color, equals(white));
-        expect(card.elevation, equals(0));
-      });
+      expect(finder, findsOneWidget);
+      expect(card.color, equals(white));
+      expect(card.elevation, equals(0));
     },
   );
 
@@ -79,31 +71,27 @@ void main() {
       testWidgets(
         'deve encotrar a posição "rigth: 0" para a marcação de favorito',
         (tester) async {
-          await mockNetworkImages(() async {
-            await tester.pumpWidget(widget);
+          await tester.pumpWidget(widget);
 
-            final finder = find.byType(Positioned);
-            final positioned = tester.widget<Positioned>(finder);
+          final finder = find.byType(Positioned);
+          final positioned = tester.widget<Positioned>(finder);
 
-            expect(finder, findsOneWidget);
-            expect(positioned.right, equals(0));
-          });
+          expect(finder, findsOneWidget);
+          expect(positioned.right, equals(0));
         },
       );
 
       testWidgets(
         'deve encontrar a cor branca na marcação de favorito(favorite: falso)',
         (tester) async {
-          await mockNetworkImages(() async {
-            await tester.pumpWidget(widget);
+          await tester.pumpWidget(widget);
 
-            final key = Key('favorite-key:${book.id}');
-            final finder = find.byKey(key);
-            final container = tester.widget<Container>(finder);
+          final key = Key('favorite-key:${book.id}');
+          final finder = find.byKey(key);
+          final container = tester.widget<Container>(finder);
 
-            expect(finder, findsOneWidget);
-            expect(container.color, equals(white));
-          });
+          expect(finder, findsOneWidget);
+          expect(container.color, equals(white));
         },
       );
 
@@ -120,15 +108,13 @@ void main() {
             ),
           );
 
-          await mockNetworkImages(() async {
-            await tester.pumpWidget(widget2);
-            final key = Key('favorite-key:${favorite.id}');
-            final finder = find.byKey(key);
-            final container = tester.widget<Container>(finder);
+          await tester.pumpWidget(widget2);
+          final key = Key('favorite-key:${favorite.id}');
+          final finder = find.byKey(key);
+          final container = tester.widget<Container>(finder);
 
-            expect(finder, findsOneWidget);
-            expect(container.color, equals(red));
-          });
+          expect(finder, findsOneWidget);
+          expect(container.color, equals(red));
         },
       );
     },
