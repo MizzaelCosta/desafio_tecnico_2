@@ -118,7 +118,6 @@ Antes de começar Certifique-se de ter:
 - [Epub_View](https://pub.dev/packages/epub_view)
 - [Internet_file](https://pub.dev/packages/internet_file)
 - [Mocktail](https://pub.dev/packages/mocktail)
-- [Mocktail_image_network](https://pub.dev/packages/mocktail_image_network)
 
 ### Autor
 ---
