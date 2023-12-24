@@ -1,11 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:desafio_tecnico_2/src/constants/color.dart';
+import 'package:desafio_tecnico_2/src/exceptions/exception_handles.dart';
 import 'package:desafio_tecnico_2/src/models/book.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_controller.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_page.dart';
 import 'package:desafio_tecnico_2/src/pages/read/read_book_controller.dart';
-import 'package:desafio_tecnico_2/src/repositories/api/book_repository.dart';
 import 'package:desafio_tecnico_2/src/widgets/app_buttom.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -16,16 +17,16 @@ import '../../mocks/constants.dart';
 
 void main() {
   final dio = DioMock();
-  final requestOptions = RequestOptions();
-  final apiBooks = BooksRepositoryDio(dio);
-  final apiEpub = EpubRepositoryMock();
-  final storage = LocalStorageMock();
+  final repositoryBooks = BooksRepositoryDioMock(dio);
+  final repositoryEpub = EpubRepositoryMock();
+  final storage = LocalStorageHiveMock();
+  final bookList = listOfTenBooksMaps.map((e) => Book.fromMap(e)).toList();
 
   testWidgets(
     'deve encontrar a "appBar.backgroundColor" igual a "lilac"',
     (tester) async {
-      final home1 = HomeController(apiBooks, storage);
-      final read1 = ReadBookController(storage, apiEpub);
+      final home1 = HomeController(repositoryBooks, storage);
+      final read1 = ReadBookController(storage, repositoryEpub);
       final widget1 = MultiProvider(
         providers: [
           Provider<HomeController>(create: (_) => home1),
@@ -47,8 +48,8 @@ void main() {
   testWidgets(
     'deve encontrar 2(dois) botões na "appBar"',
     (tester) async {
-      final home2 = HomeController(apiBooks, storage);
-      final read2 = ReadBookController(storage, apiEpub);
+      final home2 = HomeController(repositoryBooks, storage);
+      final read2 = ReadBookController(storage, repositoryEpub);
       final widget2 = MultiProvider(
         providers: [
           Provider<HomeController>(create: (_) => home2),
@@ -57,11 +58,12 @@ void main() {
         child: const MaterialApp(home: HomePage()),
       );
 
-      when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
-          (_) async => Response(
-              data: listOfTenBooksMaps,
-              statusCode: 200,
-              requestOptions: requestOptions));
+      when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
+      when(() => storage.putAll(any())).thenAnswer((_) => Future.value());
+      when(() => repositoryBooks.getBooks()).thenAnswer((_) async => bookList);
+      when(() => repositoryBooks.getCoverImage(any()))
+          .thenAnswer((_) async => Uint8List.fromList([255, 255, 255]));
+
       await tester.pumpWidget(widget2);
 
       final appButtom = find.byType(AppButtom);
@@ -70,10 +72,10 @@ void main() {
   );
 
   testWidgets(
-    'description',
+    'Deve exibir "controller.books" na tela.',
     (tester) async {
-      final home3 = HomeController(apiBooks, storage);
-      final read3 = ReadBookController(storage, apiEpub);
+      final home3 = HomeController(repositoryBooks, storage);
+      final read3 = ReadBookController(storage, repositoryEpub);
       final widget3 = MultiProvider(
         providers: [
           Provider<HomeController>(create: (_) => home3),
@@ -82,11 +84,11 @@ void main() {
         child: const MaterialApp(home: HomePage()),
       );
 
-      when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
-          (_) async => Response(
-              data: listOfTenBooksMaps,
-              statusCode: 200,
-              requestOptions: requestOptions));
+      when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
+      when(() => storage.putAll(any())).thenAnswer((_) => Future.value());
+      when(() => repositoryBooks.getBooks()).thenAnswer((_) async => bookList);
+      when(() => repositoryBooks.getCoverImage(any()))
+          .thenAnswer((_) async => Uint8List.fromList([255, 255, 255]));
 
       await tester.pumpWidget(widget3);
 
@@ -99,8 +101,8 @@ void main() {
   testWidgets(
     'deve exibir "controller.error" na tela.',
     (tester) async {
-      final home4 = HomeController(apiBooks, storage);
-      final read4 = ReadBookController(storage, apiEpub);
+      final home4 = HomeController(repositoryBooks, storage);
+      final read4 = ReadBookController(storage, repositoryEpub);
       final widget4 = MultiProvider(
         providers: [
           Provider<HomeController>(create: (_) => home4),
@@ -109,15 +111,12 @@ void main() {
         child: const MaterialApp(home: HomePage()),
       );
 
-      final requestOptions = RequestOptions();
-      final book = Book.empty();
       when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
-      when(() => storage.get(book)).thenAnswer((_) async => Book.empty());
-      when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
-          (_) async => Response(
-              data: listOfTenBooksMaps,
-              statusCode: 404,
-              requestOptions: requestOptions));
+      when(() => storage.putAll(any())).thenAnswer((_) => Future.value());
+      when(() => repositoryBooks.getBooks())
+          .thenAnswer((_) async => throw ExceptionHandled);
+      when(() => repositoryBooks.getCoverImage(any()))
+          .thenAnswer((_) async => Uint8List.fromList([255, 255, 255]));
 
       await tester.pumpWidget(widget4);
 

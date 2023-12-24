@@ -15,7 +15,7 @@ void main() {
   final book = Book.fromMap(mapWithOneBook);
   final dio = DioMock();
   final repository = BooksRepositoryDio(dio);
-  final storage = LocalStorageMock();
+  final storage = LocalStorageHiveMock();
   final controller = HomeController(repository, storage);
   final widget = Provider<HomeController>(
     create: (_) => controller,

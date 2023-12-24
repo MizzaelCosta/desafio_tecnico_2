@@ -19,7 +19,7 @@ void main() {
               statusCode: 200,
               requestOptions: requestOptions));
 
-      final list = await repository.get();
+      final list = await repository.getBooks();
 
       expect(list.isNotEmpty, equals(true));
       expect(list[1].title, equals("Kazan"));
@@ -34,7 +34,7 @@ void main() {
           (_) async => Response(
               data: [], statusCode: 404, requestOptions: requestOptions));
 
-      expect(() async => await repository.get(), throwsException);
+      expect(() async => await repository.getBooks(), throwsException);
     },
   );
 }

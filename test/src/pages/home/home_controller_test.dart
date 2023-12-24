@@ -1,7 +1,8 @@
+import 'dart:typed_data';
+
+import 'package:desafio_tecnico_2/src/exceptions/exception_handles.dart';
 import 'package:desafio_tecnico_2/src/models/book.dart';
 import 'package:desafio_tecnico_2/src/pages/home/home_controller.dart';
-import 'package:desafio_tecnico_2/src/repositories/api/book_repository.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -10,19 +11,19 @@ import '../../mocks/constants.dart';
 
 void main() {
   final dio = DioMock();
-  final repository = BooksRepositoryDio(dio);
-  final storage = LocalStorageMock();
+  final repository = BooksRepositoryDioMock(dio);
+  final storage = LocalStorageHiveMock();
   final controller = HomeController(repository, storage);
-  final requestOptions = RequestOptions();
+  final bookList = listOfTenBooksMaps.map((e) => Book.fromMap(e)).toList();
 
   test(
     'deve receber uma lista com 10 "books".',
     () async {
-      when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
-          (_) async => Response(
-              data: listOfTenBooksMaps,
-              statusCode: 200,
-              requestOptions: requestOptions));
+      when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
+      when(() => storage.putAll(any())).thenAnswer((_) => Future.value());
+      when(() => repository.getBooks()).thenAnswer((_) async => bookList);
+      when(() => repository.getCoverImage(any()))
+          .thenAnswer((_) async => Uint8List.fromList([255, 255, 255]));
 
       await controller.init();
 
@@ -34,15 +35,12 @@ void main() {
   test(
     'deve receber uma mensagem de erro',
     () async {
-      final book = Book.empty();
       when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
-      when(() => storage.get(book)).thenAnswer((_) async => Book.empty());
-      when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
-        (_) async => Response(
-            data: listOfTenBooksMaps,
-            statusCode: 404,
-            requestOptions: requestOptions),
-      );
+      when(() => storage.putAll(any())).thenAnswer((_) => Future.value());
+      when(() => repository.getCoverImage(any()))
+          .thenAnswer((_) async => Uint8List.fromList([255, 255, 255]));
+      when(() => repository.getBooks())
+          .thenAnswer((_) async => throw ExceptionHandled);
 
       await controller.init();
 
@@ -55,11 +53,11 @@ void main() {
   test(
     'deve modificar "isLoading" para "true" ao iniciar a requisição',
     () async {
-      when(() => dio.get('https://escribo.com/books.json')).thenAnswer(
-          (_) async => Response(
-              data: listOfTenBooksMaps,
-              statusCode: 200,
-              requestOptions: requestOptions));
+      when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
+      when(() => storage.putAll(any())).thenAnswer((_) => Future.value());
+      when(() => repository.getBooks()).thenAnswer((_) async => bookList);
+      when(() => repository.getCoverImage(any()))
+          .thenAnswer((_) async => Uint8List.fromList([255, 255, 255]));
 
       final before = controller.isLoading.value;
       controller.init();
@@ -67,6 +65,24 @@ void main() {
 
       expect(before, isFalse);
       expect(after, isTrue);
+    },
+  );
+
+  test(
+    'deve modificar "isLoading" para "false" ao terminar a requisição',
+    () async {
+      when(() => storage.getAll()).thenAnswer((_) async => <Book>[]);
+      when(() => storage.putAll(any())).thenAnswer((_) => Future.value());
+      when(() => repository.getBooks()).thenAnswer((_) async => bookList);
+      when(() => repository.getCoverImage(any()))
+          .thenAnswer((_) async => Uint8List.fromList([255, 255, 255]));
+
+      final before = controller.isLoading.value;
+      await controller.init();
+      final after = controller.isLoading.value;
+
+      expect(before, isFalse);
+      expect(after, isFalse);
     },
   );
 }

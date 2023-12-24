@@ -48,7 +48,7 @@ class BooksRepositoryDio implements BooksRepository {
 
       final response = await dio.get(
         url,
-        options: Options(responseType: ResponseType.bytes),
+        // options: Options(responseType: ResponseType.bytes),
       );
 
       if (response.statusCode == 200) {
